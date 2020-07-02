@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="style.css">
+  </head>
+<body>
+	<div class="container">
+		<h1>Fancy Search Box</h1>
+		<h2>Try below!</h2>
+		<div class="search-box">
+			<div class="search-icon"><i class="fa fa-search search-icon"></i></div>
+			<form action="" class="search-form">
+				<input type="text" placeholder="Search" id="search" autocomplete="off">
+			</form>
+			<!-- <svg class="search-border" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" viewBox="0 0 671 111" style="enable-background:new 0 0 671 111;"
+			 xml:space="preserve">
+          <path class="border" d="M335.5,108.5h-280c-29.3,0-53-23.7-53-53v0c0-29.3,23.7-53,53-53h280"/>
+          <path class="border" d="M335.5,108.5h280c29.3,0,53-23.7,53-53v0c0-29.3-23.7-53-53-53h-280"/> -->
+        <!-- </svg>
+			<div class="go-icon"><i class="fa fa-arrow-right"></i></div> -->
+        </div>
+        <div id="oracleTxt">ok dopey</div>
+        <div id="color_identity">ok dopey</div>
+        <div id="type_line">ok dopey</div>
+        <div id="cmc">ok dopey</div>
+        <div id="name">ok dopey</div>
+        <div id="img_home"></div>
+        
+    </div>
+    <script>
+    // Get the input field
+    var input = document.getElementById("search");
+
+    function httpGet(theUrl)
+    {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+        xmlHttp.send( null );
+        return xmlHttp.responseText;
+    }
+
+    // Execute a function when the user releases a key on the keyboard
+    input.addEventListener("keydown", function(event) {
+        if (event.keyCode === 13) {
+            var q = document.getElementById("search").value;
+            event.preventDefault();
+            console.log(q);
+            console.log(httpGet("https://api.scryfall.com/cards/named?fuzzy="+q));
+            var obj = JSON.parse(httpGet("https://api.scryfall.com/cards/named?fuzzy="+q));
+            console.log(obj);
+            console.log(obj.name);
+            
+            console.log(obj.cmc);
+
+            //add image
+            var img = new Image();
+            img.src = obj.image_uris.png;
+            //img_home.innerHTML = img.src;
+           // document.getElementById('img_home').src=img.src;
+            img_home.appendChild(img);
+
+            document.getElementById("oracleTxt").innerHTML = obj.oracle_text;
+            document.getElementById("type_line").innerHTML = obj.type_line;
+            document.getElementById("color_identity").innerHTML = obj.color_identity;
+            document.getElementById("cmc").innerHTML = obj.cmc;
+            document.getElementById("name").innerHTML = obj.name;
+
+            //https://api.scryfall.com/cards/named?fuzzy=
+        }
+    });
+
+    
+
+    </script>
+</body>
+</html>
