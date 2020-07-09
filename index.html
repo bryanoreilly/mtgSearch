@@ -6,7 +6,14 @@
 <body>
 	<div class="container">
 		<h1>Fancy Search Box</h1>
-		<h2>Try below!</h2>
+        <h2>Try below!</h2>
+        <div class="slider">
+            <div class="slide" id="slide-1" rel="preload-01"></div>
+            <div class="slide" id="slide-2"></div>
+            <div class="slide" id="slide-3"></div>
+            <div class="slide" id="slide-4"></div>
+            <div class="slide" id="slide-5"></div>
+          </div>
 		<div class="search-box">
 			<div class="search-icon"><i class="fa fa-search search-icon"></i></div>
 			<form action="" class="search-form">
@@ -19,17 +26,19 @@
         <!-- </svg>
 			<div class="go-icon"><i class="fa fa-arrow-right"></i></div> -->
         </div>
-        <div id="oracleTxt">ok dopey</div>
-        <div id="color_identity">ok dopey</div>
-        <div id="type_line">ok dopey</div>
-        <div id="cmc">ok dopey</div>
-        <div id="name">ok dopey</div>
+        <div id="oracleTxt">: :</div>
+        <div id="color_identity">: :</div>
+        <div id="type_line">: :</div>
+        <div id="cmc">: :</div>
+        <div id="name">: :</div>
         <div id="img_home"></div>
         
     </div>
     <script>
     // Get the input field
     var input = document.getElementById("search");
+    var slide1 = document.getElementById("slide-1");
+
 
     function httpGet(theUrl)
     {
@@ -39,8 +48,35 @@
         return xmlHttp.responseText;
     }
 
+    function loadLotus(){
+
+        //https://api.scryfall.com/cards/bd8fa327-dd41-4737-8f19-2cf5eb1f7cdd
+        console.log("Ready!");
+        var obj = JSON.parse(httpGet("https://api.scryfall.com/cards/named?fuzzy=black lotus"));
+        var img = new Image();
+        img.src = obj.image_uris.art_crop;
+        img.resource
+        slide1.appendChild(img);
+    }
+
+    // Reasonably portable, non-framework way of having your script set a function to run at load time:
+    if(window.attachEvent) {
+        window.attachEvent('onload', loadLotus);
+    } else {
+        if(window.onload) {
+            var curronload = window.onload;
+            var newonload = function(evt) {
+                curronload(evt);
+                loadLotus(evt);
+            };
+            window.onload = newonload;
+        } else {
+            window.onload = loadLotus;
+        }
+    }
     // Execute a function when the user releases a key on the keyboard
     input.addEventListener("keydown", function(event) {
+        var slide1 = document.getElementById("slide-1");
         if (event.keyCode === 13) {
             var q = document.getElementById("search").value;
             event.preventDefault();
@@ -54,10 +90,14 @@
 
             //add image
             var img = new Image();
+            var img2 = new Image();
             img.src = obj.image_uris.png;
-            //img_home.innerHTML = img.src;
-           // document.getElementById('img_home').src=img.src;
+            img2.src = obj.image_uris.art_crop;
             img_home.appendChild(img);
+            // img.src = obj.image_uris.art_crop;
+            // slide1.parentNode.removeChild(slide1);
+            slide1.appendChild(img2);
+            //slide1.replaceChild(slide1.lastChild, img);
 
             document.getElementById("oracleTxt").innerHTML = obj.oracle_text;
             document.getElementById("type_line").innerHTML = obj.type_line;
